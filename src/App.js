@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { askForPermissioToReceiveNotifications } from './firebase';
 
 function App() {
+  useEffect(() => {
+    askForPermissioToReceiveNotifications()
+  }, []);
   return (
     <div className="App">
       <header className="App-header">
