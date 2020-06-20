@@ -13,6 +13,33 @@ export const initializeFirebase = () => {
   });
 }
 
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', async () => {
+      const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js', {
+          updateViaCache: 'none'
+      });
+      firebase.messaging().useServiceWorker(registration);
+
+      firebase.messaging().useServiceWorker(registration);
+      firebase.messaging().onMessage((payload) => {
+          const title = payload.notification.title;
+          const options = {
+              body: payload.notification.body,
+              icon: payload.notification.icon,
+              actions: [
+                  {
+                      action: payload.fcmOptions.link,
+                      title: 'Book Appointment'
+                  }
+              ]
+          };
+          registration.showNotification(title, options);           
+      });
+
+  });
+  
+}
+
 export const askForPermissioToReceiveNotifications = async () => {
   try {
     const messaging = firebase.messaging();
@@ -25,9 +52,3 @@ export const askForPermissioToReceiveNotifications = async () => {
     console.error(error);
   }
 }
-
-navigator.serviceWorker
-    .register('/firebase-messaging-sw.js')
-    .then((registration) => {
-      firebase.messaging().useServiceWorker(registration);
-    });
